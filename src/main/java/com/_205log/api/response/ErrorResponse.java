@@ -1,5 +1,6 @@
 package com._205log.api.response;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -16,12 +17,17 @@ import java.util.Map;
  * }
  */
 @Getter
-@RequiredArgsConstructor
 public class ErrorResponse {
 
     private final String code;
     private final String message;
     private final Map<String, String> validation = new HashMap<>();//초기 값이 null 이기 떄문에 new로 객체 만들어줌
+
+    @Builder
+    public ErrorResponse(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 
     public void addValidation(String fieldName, String errorMessage) {
         this.validation.put(fieldName, errorMessage);
