@@ -38,4 +38,15 @@ public class PostController   {
         //          -> 한 번에 일괄적으로 잘 처리되는 케이스가 없습니다. -> 잘 관리하는 형태가 중요합니다.
        postService.write(request);
     }
+
+    /**
+     * /posts -> 글 전체 조회(검색 + 페이징)
+     * /posts/{postId} -> 글 한개만 조회
+     */
+    @GetMapping("/posts/{postId}")
+    public Post get(@PathVariable(name = "postId") Long id){
+        Post post = postService.get(id);
+        return post;
+    }
+
 }
