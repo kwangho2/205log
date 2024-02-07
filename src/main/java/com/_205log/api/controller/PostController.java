@@ -45,10 +45,13 @@ public class PostController   {
      * /posts/{postId} -> 글 한개만 조회
      */
     @GetMapping("/posts/{postId}")
-    public PostResponse get(@PathVariable(name = "postId") Long id){
-        PostResponse response = postService.get(id);
-        // 응답 클래스를 분리하세요 (서비스 정책에 맞는)
-        return response;
+    public PostResponse get(@PathVariable Long postId){
+        return postService.get(postId);
+    }
+
+    @GetMapping("/posts")
+    public List<PostResponse> getList() {
+        return postService.getList();
     }
 
 }
