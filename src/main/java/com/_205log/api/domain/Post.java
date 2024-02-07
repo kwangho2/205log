@@ -1,10 +1,7 @@
 package com._205log.api.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
@@ -25,4 +22,5 @@ public class Post {
         this.title = title;
         this.content = content;
     }
+
 }

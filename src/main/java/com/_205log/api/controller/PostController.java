@@ -2,6 +2,7 @@ package com._205log.api.controller;
 
 import com._205log.api.domain.Post;
 import com._205log.api.request.PostCreate;
+import com._205log.api.response.PostResponse;
 import com._205log.api.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,9 +45,10 @@ public class PostController   {
      * /posts/{postId} -> 글 한개만 조회
      */
     @GetMapping("/posts/{postId}")
-    public Post get(@PathVariable(name = "postId") Long id){
-        Post post = postService.get(id);
-        return post;
+    public PostResponse get(@PathVariable(name = "postId") Long id){
+        PostResponse response = postService.get(id);
+        // 응답 클래스를 분리하세요 (서비스 정책에 맞는)
+        return response;
     }
 
 }
