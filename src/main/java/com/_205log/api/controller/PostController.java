@@ -2,6 +2,7 @@ package com._205log.api.controller;
 
 import com._205log.api.domain.Post;
 import com._205log.api.request.PostCreate;
+import com._205log.api.request.PostSearch;
 import com._205log.api.response.PostResponse;
 import com._205log.api.service.PostService;
 import jakarta.validation.Valid;
@@ -52,8 +53,8 @@ public class PostController   {
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getList(Pageable pageable) {
-        return postService.getList(pageable);
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
+        return postService.getList(postSearch);
     }
 
 }

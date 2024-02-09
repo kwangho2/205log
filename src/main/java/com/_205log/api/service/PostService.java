@@ -3,6 +3,7 @@ package com._205log.api.service;
 import com._205log.api.domain.Post;
 import com._205log.api.repository.PostRepository;
 import com._205log.api.request.PostCreate;
+import com._205log.api.request.PostSearch;
 import com._205log.api.response.PostResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,10 +48,10 @@ public class PostService {
     // 글이 -> 100,000,000 -> DB글 모두 조회하는 경우 -> DB가 뻗을 수 있다.
     // DB -> 애플리캐이션 서버로 전달하는 시간, 트래픽비용 등이 많이 발생할 수 있다.
 
-    public List<PostResponse> getList(Pageable pageable) {
+    public List<PostResponse> getList(PostSearch postSearch) {
 //        Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC,"id"));
 
-        return postRepository.findAll(pageable).stream()
+        return postRepository.getList(postSearch).stream()
                 .map(PostResponse::new)
 //                .map(post -> new PostResponse(post))
                 .collect(Collectors.toList());

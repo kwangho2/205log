@@ -3,6 +3,7 @@ package com._205log.api.service;
 import com._205log.api.domain.Post;
 import com._205log.api.repository.PostRepository;
 import com._205log.api.request.PostCreate;
+import com._205log.api.request.PostSearch;
 import com._205log.api.response.PostResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,13 +87,15 @@ class PostServiceTest {
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
 
-        Pageable pageable = PageRequest.of(0,5, DESC, "id");
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .build();
 
         // when
-        List<PostResponse> posts = postService.getList(pageable);
+        List<PostResponse> posts = postService.getList(postSearch);
 
         // then
-        assertEquals(5L, posts.size());
+        assertEquals(10L, posts.size());
         assertEquals("205 제목 30", posts.get(0).getTitle());
         assertEquals("205 제목 26", posts.get(4).getTitle());
     }
