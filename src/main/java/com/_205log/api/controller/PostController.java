@@ -2,6 +2,7 @@ package com._205log.api.controller;
 
 import com._205log.api.domain.Post;
 import com._205log.api.request.PostCreate;
+import com._205log.api.request.PostEdit;
 import com._205log.api.request.PostSearch;
 import com._205log.api.response.PostResponse;
 import com._205log.api.service.PostService;
@@ -55,6 +56,11 @@ public class PostController   {
     @GetMapping("/posts")
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch) {
         return postService.getList(postSearch);
+    }
+
+    @PatchMapping("/posts/{postId}")
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
+        postService.edit(postId, request);
     }
 
 }

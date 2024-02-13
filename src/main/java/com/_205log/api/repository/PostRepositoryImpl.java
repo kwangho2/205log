@@ -1,7 +1,6 @@
 package com._205log.api.repository;
 
 import com._205log.api.domain.Post;
-import com._205log.api.domain.QPost;
 import com._205log.api.request.PostSearch;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

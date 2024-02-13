@@ -3,6 +3,7 @@ package com._205log.api.service;
 import com._205log.api.domain.Post;
 import com._205log.api.repository.PostRepository;
 import com._205log.api.request.PostCreate;
+import com._205log.api.request.PostEdit;
 import com._205log.api.request.PostSearch;
 import com._205log.api.response.PostResponse;
 import org.junit.jupiter.api.Assertions;
@@ -98,5 +99,55 @@ class PostServiceTest {
         assertEquals(10L, posts.size());
         assertEquals("205 제목 30", posts.get(0).getTitle());
         assertEquals("205 제목 26", posts.get(4).getTitle());
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test4() {
+        // given
+        Post post = Post.builder()
+                .title("205")
+                .content("반포자이")
+                .build();
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("206")
+                .content("반포자이")
+                .build();
+
+        // when
+        postService.edit(post.getId(), postEdit);
+
+        // then
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id =" + post.getId()));
+        Assertions.assertEquals("206", changedPost.getTitle());
+        Assertions.assertEquals("반포자이", changedPost.getContent());
+    }
+
+    @Test
+    @DisplayName("글 내용 수정")
+    void test5() {
+        // given
+        Post post = Post.builder()
+                .title("205")
+                .content("반포자이")
+                .build();
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("205")
+                .content("초가집")
+                .build();
+
+        // when
+        postService.edit(post.getId(), postEdit);
+
+        // then
+        Post changedPost = postRepository.findById(post.getId())
+                .orElseThrow(() -> new RuntimeException("글이 존재하지 않습니다. id =" + post.getId()));
+        Assertions.assertEquals("205", changedPost.getTitle());
+        Assertions.assertEquals("초가집", changedPost.getContent());
     }
 }

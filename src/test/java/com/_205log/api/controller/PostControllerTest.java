@@ -3,6 +3,7 @@ package com._205log.api.controller;
 import com._205log.api.domain.Post;
 import com._205log.api.repository.PostRepository;
 import com._205log.api.request.PostCreate;
+import com._205log.api.request.PostEdit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,8 +22,7 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -188,6 +188,29 @@ class PostControllerTest {
                 .andExpect(jsonPath("$[0].id").value(requestPosts.get(29).getId()))
                 .andExpect(jsonPath("$[0].title").value("205 제목 30"))
                 .andExpect(jsonPath("$[0].content").value("반포자이 30"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 제목 수정")
+    void test7() throws Exception {
+        // given
+        Post post = Post.builder()
+                .title("205")
+                .content("반포자이")
+                .build();
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("206")
+                .content("반포자이")
+                .build();
+
+        // expected
+        mockMvc.perform(patch("/posts/{postId}", post.getId()) // PATCH /posts/{postId}
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(postEdit)))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }
