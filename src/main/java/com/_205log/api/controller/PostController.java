@@ -1,6 +1,5 @@
 package com._205log.api.controller;
 
-import com._205log.api.domain.Post;
 import com._205log.api.request.PostCreate;
 import com._205log.api.request.PostEdit;
 import com._205log.api.request.PostSearch;
@@ -9,15 +8,9 @@ import com._205log.api.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController

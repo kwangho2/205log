@@ -1,6 +1,5 @@
 package com._205log.api.domain;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter

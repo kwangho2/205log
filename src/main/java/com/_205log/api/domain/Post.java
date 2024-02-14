@@ -1,8 +1,10 @@
 package com._205log.api.domain;
 
-import com._205log.api.request.PostEdit;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
