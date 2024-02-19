@@ -1,5 +1,6 @@
 package com._205log.api.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,19 +17,42 @@ import java.util.Map;
  * }
  */
 @Getter
+//@JsonInclude(value = JsonInclude.Include.NON_EMPTY) // 데이터 없는 항목은 웹으로 안보내줌
 public class ErrorResponse {
 
     private final String code;
     private final String message;
-    private final Map<String, String> validation = new HashMap<>();//초기 값이 null 이기 떄문에 new로 객체 만들어줌
+    private final Map<String, String> validation;
 
     @Builder
-    public ErrorResponse(String code, String message) {
+    public ErrorResponse(String code, String message, Map<String, String> validation) {
         this.code = code;
         this.message = message;
+        this.validation = validation != null ? validation : new HashMap<>();
     }
 
     public void addValidation(String fieldName, String errorMessage) {
         this.validation.put(fieldName, errorMessage);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

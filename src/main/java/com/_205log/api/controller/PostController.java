@@ -1,5 +1,6 @@
 package com._205log.api.controller;
 
+import com._205log.api.exception.InvalidRequest;
 import com._205log.api.request.PostCreate;
 import com._205log.api.request.PostEdit;
 import com._205log.api.request.PostSearch;
@@ -34,7 +35,9 @@ public class PostController   {
         // Bad Case: 서버에서 -> 반드시 이렇게 할껍니다. fix
         //          -> 서버에서 차라리 유연하게 대응하는게 좋습니다. -> 코드를 잘 짜야겠죠?! ㅎ
         //          -> 한 번에 일괄적으로 잘 처리되는 케이스가 없습니다. -> 잘 관리하는 형태가 중요합니다.
-       postService.write(request);
+        request.validate();
+
+        postService.write(request);
     }
 
     /**
