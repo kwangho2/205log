@@ -68,3 +68,6 @@ target
 secrets.yml
 .gradletasknamecache
 .git-hooks/
+
+### nodeenv ###
+nodeenv-20
