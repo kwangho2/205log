@@ -18,10 +18,10 @@ axios.get('/api/posts?page=1&size=5').then((response) => {
 <template>
   <ul>
     <li v-for="post in posts" :key="post.id">
-      <div>
+      <div class="title">
         <router-link :to="{name:'read', params : {postId : post.id}}">{{ post.title }}</router-link>
       </div>
-      <div>
+      <div class="content">
         {{ post.content }}
       </div>
     </li>
@@ -29,8 +29,22 @@ axios.get('/api/posts?page=1&size=5').then((response) => {
 </template>
 
 <style scoped>
+ul {
+  list-style: none;
+  padding: 0;
+}
 li {
-  margin-bottom: 1rem;
+  margin-bottom: 1.3rem;
+}
+
+li .title {
+  font-size: 1.2rem;
+  color: #303030
+}
+
+li .content {
+  font-size: 0.95rem;
+  color: #5d5d5d;
 }
 
 li:last-child {
