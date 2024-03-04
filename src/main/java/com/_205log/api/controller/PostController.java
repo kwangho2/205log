@@ -27,17 +27,15 @@ public class PostController   {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid PostCreate request) {
-        // Case1. 저장한 데이터 Entity -> response로 응답하기
-        // Case2. 저장한 데이터의 Primary_id -> response로 응답하기
-        //          Client에서는 수신한id를 글 조회 API를 통해서 데이터를 수신받음
-        // Case3. 응답 필요 없음 -> 클라이언트에서 모든 POST(글) 데이터 context를 잘 관리함
-        // Bad Case: 서버에서 -> 반드시 이렇게 할껍니다. fix
-        //          -> 서버에서 차라리 유연하게 대응하는게 좋습니다. -> 코드를 잘 짜야겠죠?! ㅎ
-        //          -> 한 번에 일괄적으로 잘 처리되는 케이스가 없습니다. -> 잘 관리하는 형태가 중요합니다.
-        request.validate();
+    public void post(@RequestBody @Valid PostCreate request, @RequestHeader String authorization) {
+        // 1. GET Parameter -> ??
+        // 2. POST(body) value ?? 글작성과 무관한 값이 들어가게 되는 경우이다.
+        // 3. Header
+        if (authorization.equals("205")) {
+            request.validate();
 
-        postService.write(request);
+            postService.write(request);
+        }
     }
 
     /**
@@ -55,12 +53,16 @@ public class PostController   {
     }
 
     @PatchMapping("/posts/{postId}")
-    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request) {
-        postService.edit(postId, request);
+    public void edit(@PathVariable Long postId, @RequestBody @Valid PostEdit request, @RequestHeader String authorization) {
+        if (authorization.equals("205")) {
+            postService.edit(postId, request);
+        }
     }
 
     @DeleteMapping("/posts/{postId}")
-    public void delete(@PathVariable Long postId){
-        postService.delete(postId);
+    public void delete(@PathVariable Long postId, @RequestHeader String authorization){
+        if (authorization.equals("205")) {
+            postService.delete(postId);
+        }
     }
 }

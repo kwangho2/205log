@@ -72,6 +72,7 @@ bootJar {
     dependsOn asciidoctor
 //    from ("${asciidoctor.outputDir}") {
 //        println ">>>" + asciidoctor.outputDir
+
 //        into 'static/docs'
 //    }
     copy {
