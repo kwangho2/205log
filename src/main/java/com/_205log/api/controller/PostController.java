@@ -1,6 +1,6 @@
 package com._205log.api.controller;
 
-import com._205log.api.exception.InvalidRequest;
+import com._205log.api.config.data.UserSession;
 import com._205log.api.request.PostCreate;
 import com._205log.api.request.PostEdit;
 import com._205log.api.request.PostSearch;
@@ -26,14 +26,15 @@ public class PostController   {
 
     private final PostService postService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "hello";
+    @GetMapping("/foo")
+    public String foo(UserSession userSession) {
+        log.info(">>>{}", userSession.name);
+        return userSession.name;
     }
 
-    @GetMapping("/foo")
-    public String foo() {
-        return "foo";
+    @GetMapping("/bar")
+    public String bar(UserSession userSession) {
+        return "인증이 필요한 페이지";
     }
 
     @PostMapping("/posts")
