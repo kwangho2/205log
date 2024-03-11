@@ -1,9 +1,11 @@
 package com._205log.api.controller;
 
 import com._205log.api.domain.User;
+import com._205log.api.repository.SessionRepository;
 import com._205log.api.repository.UserRepository;
 import com._205log.api.request.Login;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-import static java.time.LocalDateTime.now;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -31,36 +34,93 @@ class AuthControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SessionRepository sessionRepository;
+
     @BeforeEach
     void clean() {
         userRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("로그인시 아이디,비밀번호 틀릴경우 에러 발생")
+    @DisplayName("로그인 성공")
     void test1() throws Exception {
         // given
-        User user = User.builder()
+        userRepository.save(User.builder()
+                .name("이광호")
                 .email("205@gmail.com")
                 .password("1234")
-                .name("이광호")
-                .createdAt(now())
-                .build();
-        userRepository.save(user);
+                .build());
 
-        Login loginRequest = Login.builder()
+        Login login = Login.builder()
                 .email("205@gmail.com")
-                .password("12324")
+                .password("1234")
                 .build();
 
-        String json = objectMapper.writeValueAsString(loginRequest);
+        String json = objectMapper.writeValueAsString(login);
 
         // expect
         mockMvc.perform(post("/auth/login")
                         .contentType(APPLICATION_JSON)
                         .content(json)
                 )
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("로그인 성공후 세션 1개 생성")
+    void test2() throws Exception {
+        // given
+        User user = userRepository.save(User.builder()
+                .name("이광호")
+                .email("205@gmail.com")
+                .password("1234")
+                .build());
+
+        Login login = Login.builder()
+                .email("205@gmail.com")
+                .password("1234")
+                .build();
+
+        String json = objectMapper.writeValueAsString(login);
+
+        // expect
+        mockMvc.perform(post("/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isOk())
+                .andDo(print());
+
+        Assertions.assertEquals(1L, user.getSessions().size());
+    }
+
+    @Test
+    @DisplayName("로그인 성공후 세션 응답")
+    void test3() throws Exception {
+        // given
+        User user = userRepository.save(User.builder()
+                .name("이광호")
+                .email("205@gmail.com")
+                .password("1234")
+                .build());
+
+        Login login = Login.builder()
+                .email("205@gmail.com")
+                .password("1234")
+                .build();
+
+        String json = objectMapper.writeValueAsString(login);
+
+        // expect
+        mockMvc.perform(post("/auth/login")
+                        .contentType(APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessToken").isNotEmpty())
                 .andDo(print());
     }
 }
