@@ -6,6 +6,7 @@ import com._205log.api.repository.SessionRepository;
 import com._205log.api.repository.UserRepository;
 import com._205log.api.request.Login;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -157,18 +158,34 @@ class AuthControllerTest {
                 .build();
         Session session = user.addSession();
         userRepository.save(user);
-//        Login login = Login.builder()
-//                .email("205@gmail.com")
-//                .password("1234")
-//                .build();
-//
-//        String json = objectMapper.writeValueAsString(login);
 
         // expect
         mockMvc.perform(get("/foo")
                         .header("Authorization", session.getAccessToken()+"-other")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("로그인 후 권한이 필요한 페이지에 접속한다 /foo 쿠키 사용")
+    void test6() throws Exception {
+        // given
+        User user = User.builder()
+                .name("이광호")
+                .email("205@gmail.com")
+                .password("1234")
+                .build();
+        Session session = user.addSession();
+        userRepository.save(user);
+
+        Cookie cookie = new Cookie("SESSION", session.getAccessToken());
+
+        // expect
+        mockMvc.perform(get("/foo")
+                        .cookie(cookie)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 }
