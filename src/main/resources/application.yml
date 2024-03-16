@@ -24,3 +24,5 @@ spring:
         one-indexed-parameters: true
         default-page-size: 5
 
+leekwangho:
+  jwt-key: "eNpOPI9bq8+9+K4sIfKMj7AxvEN+cYFZ5jcnZKZlXWI="
