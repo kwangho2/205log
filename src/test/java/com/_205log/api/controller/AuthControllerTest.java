@@ -5,6 +5,7 @@ import com._205log.api.domain.User;
 import com._205log.api.repository.SessionRepository;
 import com._205log.api.repository.UserRepository;
 import com._205log.api.request.Login;
+import com._205log.api.request.Signup;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Assertions;
@@ -185,6 +186,27 @@ class AuthControllerTest {
         mockMvc.perform(get("/foo")
                         .cookie(cookie)
                         .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("회원가입")
+    void test7() throws Exception {
+        // given
+        Signup signup = Signup.builder()
+                .name("205")
+                .email("205@gmail.com")
+                .password("1234")
+                .build();
+
+        String json = objectMapper.writeValueAsString(signup);
+
+        // expect
+        mockMvc.perform(post("/auth/signup")
+                        .contentType(APPLICATION_JSON)
+                        .content(json)
+                )
                 .andExpect(status().isOk())
                 .andDo(print());
     }
