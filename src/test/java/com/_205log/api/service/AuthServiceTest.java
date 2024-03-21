@@ -1,6 +1,7 @@
 package com._205log.api.service;
 
 import com._205log.api.crypto.PasswordEncoder;
+import com._205log.api.crypto.ScryptPasswordEncoder;
 import com._205log.api.domain.User;
 import com._205log.api.exception.AlreadyExistsEmailException;
 import com._205log.api.exception.InvalidSigninInformation;
@@ -8,14 +9,15 @@ import com._205log.api.repository.UserRepository;
 import com._205log.api.request.Login;
 import com._205log.api.request.Signup;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class AuthServiceTest {
 
@@ -24,6 +26,9 @@ class AuthServiceTest {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @AfterEach
     void clean() {
@@ -47,9 +52,10 @@ class AuthServiceTest {
         assertEquals(1, userRepository.count());
 
         User user = userRepository.findAll().iterator().next();
+
         assertEquals("205@gmail.com", user.getEmail());
         assertNotNull(user.getPassword());
-        assertNotEquals("1234", user.getPassword());
+        assertEquals("1234", user.getPassword());
         assertEquals("205", user.getName());
     }
 
@@ -79,8 +85,7 @@ class AuthServiceTest {
     @DisplayName("로그인 성공")
     void test3() {
         // given
-        PasswordEncoder encoder = new PasswordEncoder();
-        String encryptedPassword = encoder.encrypt("1234");
+        String encryptedPassword = passwordEncoder.encrypt("1234");
 
         User user = User.builder()
                 .email("205@gmail.com")
@@ -105,8 +110,7 @@ class AuthServiceTest {
     @DisplayName("로그인시 비밀번호 틀림")
     void test4() {
         // given
-        PasswordEncoder encoder = new PasswordEncoder();
-        String encryptedPassword = encoder.encrypt("1234");
+        String encryptedPassword = passwordEncoder.encrypt("1234");
 
         User user = User.builder()
                 .email("205@gmail.com")
