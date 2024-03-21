@@ -1,6 +1,6 @@
 package com._205log.api.service;
 
-import com._205log.api.domain.Session;
+import com._205log.api.crypto.PasswordEncoder;
 import com._205log.api.domain.User;
 import com._205log.api.exception.AlreadyExistsEmailException;
 import com._205log.api.exception.InvalidSigninInformation;
@@ -22,10 +22,16 @@ public class AuthService {
 
     @Transactional
     public Long signin(Login login) {
-        User user = userRepository.findByEmailAndPassword(login.getEmail(), login.getPassword())
+        User user = userRepository.findByEmail(login.getEmail())
                 .orElseThrow(InvalidSigninInformation::new);
 
-        Session session = user.addSession();
+        PasswordEncoder encoder = new PasswordEncoder();
+
+        var matches = encoder.matches(login.getPassword(), user.getPassword());
+
+        if (!matches) {
+            throw new InvalidSigninInformation();
+        }
 
         return user.getId();
     }
@@ -37,13 +43,9 @@ public class AuthService {
             throw new AlreadyExistsEmailException();
         }
 
-        SCryptPasswordEncoder encoder = new SCryptPasswordEncoder(16,
-                8,
-                1,
-                32,
-                64);
+        PasswordEncoder encoder = new PasswordEncoder();
 
-        String encryptedPassword = encoder.encode(signup.getPassword());
+        String encryptedPassword = encoder.encrypt(signup.getPassword());
 
         var user = User.builder()
                 .email(signup.getEmail())
