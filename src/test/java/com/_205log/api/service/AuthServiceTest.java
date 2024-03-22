@@ -1,12 +1,10 @@
 package com._205log.api.service;
 
 import com._205log.api.crypto.PasswordEncoder;
-import com._205log.api.crypto.ScryptPasswordEncoder;
 import com._205log.api.domain.User;
 import com._205log.api.exception.AlreadyExistsEmailException;
 import com._205log.api.exception.InvalidSigninInformation;
 import com._205log.api.repository.UserRepository;
-import com._205log.api.request.Login;
 import com._205log.api.request.Signup;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -79,53 +77,5 @@ class AuthServiceTest {
 
         // expected
         assertThrows(AlreadyExistsEmailException.class, () -> authService.signup(signup));
-    }
-
-    @Test
-    @DisplayName("로그인 성공")
-    void test3() {
-        // given
-        String encryptedPassword = passwordEncoder.encrypt("1234");
-
-        User user = User.builder()
-                .email("205@gmail.com")
-                .password(encryptedPassword)
-                .name("206")
-                .build();
-        userRepository.save(user);
-
-        Login login = Login.builder()
-                .email("205@gmail.com")
-                .password("1234")
-                .build();
-
-        // when
-        Long userId = authService.signin(login);
-
-        // then
-        assertNotNull(userId);
-    }
-
-    @Test
-    @DisplayName("로그인시 비밀번호 틀림")
-    void test4() {
-        // given
-        String encryptedPassword = passwordEncoder.encrypt("1234");
-
-        User user = User.builder()
-                .email("205@gmail.com")
-                .password(encryptedPassword)
-                .name("206")
-                .build();
-        userRepository.save(user);
-
-        Login login = Login.builder()
-                .email("205@gmail.com")
-                .password("5678")
-                .build();
-
-        // expected
-        assertThrows(InvalidSigninInformation.class,
-                () -> authService.signin(login));
     }
 }

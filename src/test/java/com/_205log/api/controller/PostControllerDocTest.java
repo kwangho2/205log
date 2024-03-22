@@ -83,6 +83,7 @@ public class PostControllerDocTest {
                         .contentType(APPLICATION_JSON)
                         .accept(APPLICATION_JSON)
                         .content(json)
+                        .header("authorization", "205")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

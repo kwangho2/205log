@@ -22,7 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -118,7 +119,7 @@ class PostControllerTest {
     @DisplayName("글 여러개 조회")
     void test5() throws Exception {
         // given
-        List<Post> requestPosts = IntStream.range(1,31)
+        List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
                         .title("205 제목 " + i)
                         .content("반포자이 " + i)
@@ -145,7 +146,7 @@ class PostControllerTest {
     @DisplayName("페이지를 0으로 요청하면 첫 페이지를 가져온다.")
     void test6() throws Exception {
         // given
-        List<Post> requestPosts = IntStream.range(1,31)
+        List<Post> requestPosts = IntStream.range(1, 31)
                 .mapToObj(i -> Post.builder()
                         .title("205 제목 " + i)
                         .content("반포자이 " + i)
@@ -187,7 +188,8 @@ class PostControllerTest {
         // expected
         mockMvc.perform(patch("/posts/{postId}", post.getId()) // PATCH /posts/{postId}
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postEdit)))
+                        .content(objectMapper.writeValueAsString(postEdit))
+                        .header("authorization", "205"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -204,7 +206,8 @@ class PostControllerTest {
 
         // expected
         mockMvc.perform(delete("/posts/{postId}", post.getId())
-                .contentType(APPLICATION_JSON))
+                        .contentType(APPLICATION_JSON)
+                        .header("authorization", "205"))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -231,7 +234,8 @@ class PostControllerTest {
         // expected
         mockMvc.perform(patch("/posts/{postId}", 1L) // PATCH /posts/{postId}
                         .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(postEdit)))
+                        .content(objectMapper.writeValueAsString(postEdit))
+                        .header("authorization", "205"))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }

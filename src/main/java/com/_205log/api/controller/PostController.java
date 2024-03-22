@@ -1,6 +1,5 @@
 package com._205log.api.controller;
 
-import com._205log.api.config.data.UserSession;
 import com._205log.api.request.PostCreate;
 import com._205log.api.request.PostEdit;
 import com._205log.api.request.PostSearch;
@@ -25,17 +24,6 @@ public class PostController   {
     // Post Method
 
     private final PostService postService;
-
-    @GetMapping("/foo")
-    public Long foo(UserSession userSession) {
-        log.info(">>>{}", userSession.id);
-        return userSession.id;
-    }
-
-    @GetMapping("/bar")
-    public String bar(UserSession userSession) {
-        return "인증이 필요한 페이지";
-    }
 
     @PostMapping("/posts")
     public void post(@RequestBody @Valid PostCreate request, @RequestHeader String authorization) {
